@@ -2,11 +2,12 @@
 import pickle
 
 # 3rd-party libraries
-from flask import Flask, request, app, jsonify, url_for, render_template
+from flask import Flask, flash, request, app, jsonify, url_for, render_template, session
 import numpy as np
 import pandas as pd
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = "0gjwg08yk"
 
 # Load model and scaler
 regmodel = pickle.load(open("regmodel.pkl", "rb"))
@@ -31,6 +32,18 @@ def predict_api():
     print(output[0])
 
     return jsonify(output[0])
+
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    data = [float(x) for x in request.form.values()]
+
+    final_input = scaler.transform(np.array(data).reshape(1, -1))
+    print(final_input)
+
+    output = regmodel.predict(final_input)[0]
+    flash("The house price prediction is {}".format(output))
+    return render_template("home.html")
 
 
 if __name__ == "__main__":

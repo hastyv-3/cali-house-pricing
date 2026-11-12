@@ -1,3 +1,39 @@
-<h1>
-    HelloWorld
-</h1>
+{% extends "layout.html" %}
+
+{% block title %}
+    Mainpage
+{% endblock %}
+
+{% block main %}
+    <h1>California House Price Prediction</h1>
+    <p>Input feature values for linear regression model to predict the price.</p>
+    <form action="/predict" method="POST">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="MedInc" placeholder="MedInc" type="number" step="any" required="required">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="HouseAge" placeholder="HouseAge" type="number" step="any" required="required">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="AveRooms" placeholder="AveRooms" type="number" step="any" required="required">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="AveBedrms" placeholder="AveBedrms" type="number" step="any" required="required">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="Population" placeholder="Population" type="number" step="any" required="required">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="AveOccup" placeholder="AveOccup" type="number" step="any" required="required">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="Latitude" placeholder="Latitude" type="number" step="any" required="required">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="Longitude" placeholder="Longitude" type="number" step="any" required="required">
+        </div>
+        <button class="btn btn-primary" type="submit">Predict</button>
+
+    </form>
+
+{% endblock %}
