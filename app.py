@@ -2,16 +2,27 @@
 import pickle
 
 # 3rd-party libraries
-from flask import Flask, flash, request, app, jsonify, url_for, render_template, session
+from flask import (
+    Flask,
+    flash,
+    request,
+    app,
+    jsonify,
+    url_for,
+    render_template,
+    redirect,
+)
 import numpy as np
-import pandas as pd
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "0gjwg08yk"
 
 # Load model and scaler
-regmodel = pickle.load(open("regmodel.pkl", "rb"))
-scaler = pickle.load(open("scaling.pkl", "rb"))
+with open("regmodel.pkl", "rb") as file:
+    regmodel = pickle.load(file)
+
+with open("scaling.pkl", "rb") as file:
+    scaler = pickle.load(file)
 
 
 @app.route("/")
@@ -43,7 +54,7 @@ def predict():
 
     output = regmodel.predict(final_input)[0]
     flash("The house price prediction is {}".format(output))
-    return render_template("home.html")
+    return redirect(url_for("home"))
 
 
 if __name__ == "__main__":
