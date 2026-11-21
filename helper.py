@@ -11,7 +11,8 @@ def sanitize_input(data, PREDICTORS) -> dict[str, float]:
             abort(400, "Bad Request: must include keys (MedInc, HouseAge, AveRooms, AveBedrms,\
                 Population, AveOccup, Latitude, Longitude) ")
         try:
-            sorted_data[predictor] = data.get(predictor)
-        except ValueError:
+             value = float(data.get(predictor))
+        except TypeError, ValueError:
             abort(400, "Bad Request: values must be numeric")
+        sorted_data[predictor] = value
     return sorted_data
