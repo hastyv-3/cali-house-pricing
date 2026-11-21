@@ -3,6 +3,7 @@ import pickle
 
 # 3rd-party libraries
 from flask import (
+    abort,
     Flask,
     flash,
     request,
@@ -12,6 +13,12 @@ from flask import (
     redirect,
 )
 import numpy as np
+
+# User-created libraries
+from helper import sanitize_input
+
+PREDICTORS = ("MedInc", "HouseAge", "AveRooms", "AveBedrms", "Population", "AveOccup",
+              "Latitude", "Longitude")
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "0gjwg08yk"
@@ -32,21 +39,24 @@ def home():
 @app.route("/predict_api", methods=["POST"])
 def predict_api():
     data = request.json["data"]
+    sorted_data = sanitize_input(data, PREDICTORS)
 
-    new_data = scaler.transform(np.array(list(data.values())).reshape(1, -1))
-    output = regmodel.predict(new_data)
+
+    final_input = scaler.transform(np.array(list(sorted_data.values())).reshape(1, -1))
+    output = regmodel.predict(final_input)
 
     return jsonify(output[0])
 
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    data = [float(x) for x in request.form.values()]
+    data = request.form
+    sorted_data = sanitize_input(data, PREDICTORS)
 
-    final_input = scaler.transform(np.array(data).reshape(1, -1))
-
+    final_input = scaler.transform(np.array(sorted_data.values()).reshape(1, -1))
     output = regmodel.predict(final_input)[0]
-    flash("The house price prediction is {}".format(output))
+    
+    flash(f"The house price prediction is ${(output * 100000):.2f}")
     return redirect(url_for("home"))
 
 
