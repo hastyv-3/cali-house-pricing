@@ -53,7 +53,7 @@ def predict():
     data = request.form
     sorted_data = sanitize_input(data, PREDICTORS)
 
-    final_input = scaler.transform(np.array(sorted_data.values()).reshape(1, -1))
+    final_input = scaler.transform(np.array(list(sorted_data.values())).reshape(1, -1))
     output = regmodel.predict(final_input)[0]
     
     flash(f"The house price prediction is ${(output * 100000):.2f}")
