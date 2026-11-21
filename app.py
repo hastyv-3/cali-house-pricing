@@ -45,7 +45,7 @@ def predict_api():
     final_input = scaler.transform(np.array(list(sorted_data.values())).reshape(1, -1))
     output = regmodel.predict(final_input)
 
-    return jsonify(output[0])
+    return jsonify(output[0] * 100000)
 
 
 @app.route("/predict", methods=["POST"])
